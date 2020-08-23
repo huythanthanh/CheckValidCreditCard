@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Check credit card</title>
+    <script>
+        function validateCreditCardNumber(cardNumber) {
+            cardNumber = cardNumber.split(' ').join("");
+            if (parseInt(cardNumber) <= 0 || (!/\d{15,16}(~\W[a-zA-Z])*$/.test(cardNumber)) || cardNumber.length > 16) {
+                return false;
+            }
+            var carray = new Array();
+            for (var i = 0; i < cardNumber.length; i++) {
+                carray[carray.length] = cardNumber.charCodeAt(i) - 48;
+            }
+            carray.reverse();
+            var sum = 0;
+            for (var i = 0; i < carray.length; i++) {
+                var tmp = carray[i];
+                if ((i % 2) != 0) {
+                    tmp *= 2;
+                    if (tmp > 9) {
+                        tmp -= 9;
+                    }
+                }
+                sum += tmp;
+            }
+            return ((sum % 10) == 0);
+        }
+
+        function update(cardNumber) {
+            var valid = document.getElementById("valid");
+            if (validateCreditCardNumber(cardNumber)) {
+                valid.innerText = "This is a credit card";
+                valid.style.color = "green";
+            }
+            else {
+                valid.innerText = "This is not a credit card";
+                valid.style.color = "red";
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <input type="text" onkeyup="update(this.value);" /><br />
+
+    <span style="color: red;" id="valid">Enter credit card here</span>
+</body>
+
+</html>
